@@ -37,6 +37,7 @@ cask "azuukuy" do
                        TMPDIR=$(mktemp -d)
                        git lfs install
                        git clone --depth 1 https://github.com/azooKey/azooKey-Desktop "$TMPDIR/azooKey-Desktop"
+                       cd "$TMPDIR/azooKey-Desktop" && git lfs pull
                        mkdir -p "#{Dir.home}/Library/Input Methods/AzuuKuy.app/Contents/Resources/zenz-v3.1-small-gguf"
                        mkdir -p "#{Dir.home}/Library/Input Methods/AzuuKuy.app/Contents/Resources/base_n5_lm"
                        cp "$TMPDIR/azooKey-Desktop/azooKeyMac/Resources/zenz-v3.1-small-gguf/ggml-model-Q5_K_M.gguf" \
