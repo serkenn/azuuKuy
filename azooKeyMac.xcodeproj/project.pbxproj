@@ -41,7 +41,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		AABB10002DB376AABB100001 /* libmozuku_grammar.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmozuku_grammar.a; path = "../../MoZuku/mozuku-grammar/build/libmozuku_grammar.a"; sourceTree = SOURCE_ROOT; };
+		AABB10002DB376AABB100001 /* libmozuku_grammar.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libmozuku_grammar.a; path = "../MoZukuGrammar/build/libmozuku_grammar.a"; sourceTree = SOURCE_ROOT; };
 		1A41E61426E745D9009B65D7 /* azooKeyMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = azooKeyMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A41E61B26E745DD009B65D7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1A41E62426E745DD009B65D7 /* azooKeyMacTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = azooKeyMacTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -502,7 +502,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../MoZuku/mozuku-lsp/include",
+					"$(SRCROOT)/../MoZukuGrammar/include",
 				);
 				INFOPLIST_FILE = azooKeyMac/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -512,7 +512,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../MoZuku/mozuku-grammar/build",
+					"$(SRCROOT)/../MoZukuGrammar/build",
 					"/opt/homebrew/lib",
 					"/opt/homebrew/Cellar/mecab/0.996/lib",
 				);
@@ -555,7 +555,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../MoZuku/mozuku-lsp/include",
+					"$(SRCROOT)/../MoZukuGrammar/include",
 				);
 				INFOPLIST_FILE = azooKeyMac/Info.plist;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
@@ -565,7 +565,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(SRCROOT)/../MoZuku/mozuku-grammar/build",
+					"$(SRCROOT)/../MoZukuGrammar/build",
 					"/opt/homebrew/lib",
 					"/opt/homebrew/Cellar/mecab/0.996/lib",
 				);

@@ -21,10 +21,7 @@ if(MECAB_CONFIG)
   string(REPLACE "-L" "" MECAB_LIBRARY_DIRS "${MECAB_LIBRARY_DIRS}")
   string(REPLACE "-l" "" MECAB_LINK_LIBRARIES "${MECAB_LINK_LIBRARIES}")
   separate_arguments(MECAB_LINK_LIBRARIES)
-  message(STATUS "MeCab found via mecab-config")
-  message(STATUS "  include: ${MECAB_INCLUDE_DIRS}")
-  message(STATUS "  lib dirs: ${MECAB_LIBRARY_DIRS}")
-  message(STATUS "  libs: ${MECAB_LINK_LIBRARIES}")
+  message(STATUS "MeCab found: ${MECAB_INCLUDE_DIRS}")
 else()
   message(FATAL_ERROR "mecab-config が見つかりません。brew install mecab を実行してください。")
 endif()
@@ -37,28 +34,25 @@ endif()
 target_link_libraries(mecab_system INTERFACE ${MECAB_LINK_LIBRARIES})
 
 # ------------------------------------------------------------------
-# ソースファイル（CaboCha/tree-sitter/CURL不要の最小セット）
+# libmozuku_grammar 静的ライブラリ
+# CaboCha / tree-sitter / CURL / nlohmann_json 不要の最小構成
 # ------------------------------------------------------------------
-set(SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../mozuku-lsp/src")
-set(INC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../mozuku-lsp/include")
-
 set(GRAMMAR_SOURCES
-  ${SRC_DIR}/analyzer.cpp
-  ${SRC_DIR}/utf16.cpp
-  ${SRC_DIR}/encoding_utils.cpp
-  ${SRC_DIR}/text_processor.cpp
-  ${SRC_DIR}/pos_analyzer.cpp
-  ${SRC_DIR}/mecab_manager.cpp
-  ${SRC_DIR}/grammar_checker.cpp
-  ${SRC_DIR}/mozuku_bridge.cpp
+  src/analyzer.cpp
+  src/utf16.cpp
+  src/encoding_utils.cpp
+  src/text_processor.cpp
+  src/pos_analyzer.cpp
+  src/mecab_manager.cpp
+  src/grammar_checker.cpp
+  src/mozuku_bridge.cpp
 )
 
 add_library(mozuku_grammar STATIC ${GRAMMAR_SOURCES})
-
-target_include_directories(mozuku_grammar PUBLIC ${INC_DIR})
+target_include_directories(mozuku_grammar PUBLIC include)
 target_compile_features(mozuku_grammar PUBLIC cxx_std_17)
 
-# CaboChaなし（IME向け最小構成）
+# CaboCha 無効（IME向け最小構成）
 # MOZUKU_ENABLE_CABOCHA を定義しないことで cabocha.h を使わない
 
 if(WIN32)
@@ -75,14 +69,10 @@ find_package(Threads REQUIRED)
 target_link_libraries(mozuku_grammar PRIVATE Threads::Threads)
 
 # ------------------------------------------------------------------
-# インストール設定
+# インストール
 # ------------------------------------------------------------------
 include(GNUInstallDirs)
+install(TARGETS mozuku_grammar ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
+install(FILES include/mozuku_bridge.h DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
 
-install(TARGETS mozuku_grammar
-        ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}")
-install(FILES ${INC_DIR}/mozuku_bridge.h
-        DESTINATION "${CMAKE_INSTALL_INCLUDEDIR}")
-
-message(STATUS "mozuku_grammar static library configured")
-message(STATUS "  Sources: ${GRAMMAR_SOURCES}")
+message(STATUS "mozuku_grammar configured (MeCab only, no CaboCha/CURL/tree-sitter)")
