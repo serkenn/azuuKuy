@@ -94,6 +94,6 @@ cask "azuukuy" do
     ---------------------------------------------------------------
       1. Log out and log back in to macOS
       2. System Settings → Keyboard → Input Sources → Edit
-      3. Click "+" → Japanese → select "azooKey" → Add
+      3. Click "+" → Japanese → select "AzuuKuy" → Add
   EOS
 end
