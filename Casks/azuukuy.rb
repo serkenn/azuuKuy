@@ -13,6 +13,7 @@ cask "azuukuy" do
   depends_on macos: ">= :ventura"
   depends_on formula: "mecab"
   depends_on formula: "mecab-ipadic"
+  depends_on formula: "git-lfs"
 
   # Install to user-level Input Methods directory (no sudo required)
   artifact "AzuuKuy.app", target: "#{Dir.home}/Library/Input Methods/AzuuKuy.app"
@@ -33,6 +34,7 @@ cask "azuukuy" do
                      args: ["-c", <<~SH],
                        set -e
                        TMPDIR=$(mktemp -d)
+                       git lfs install
                        git clone --depth 1 https://github.com/azooKey/azooKey-Desktop "$TMPDIR/azooKey-Desktop"
                        mkdir -p "#{Dir.home}/Library/Input Methods/AzuuKuy.app/Contents/Resources/zenz-v3.1-small-gguf"
                        mkdir -p "#{Dir.home}/Library/Input Methods/AzuuKuy.app/Contents/Resources/base_n5_lm"
