@@ -24,20 +24,34 @@
 
 ## インストール
 
-### MeCabのインストール（必須）
+### 方法1: Homebrew（推奨）
+
+```bash
+# タップを追加してインストール
+brew tap serkenn/azuukuy https://github.com/serkenn/azuuKuy
+brew install --HEAD azuukuy
+```
+
+インストール後、`brew info azuukuy` に表示される手順（モデルファイルの配置・IMEの有効化）を実行してください。
+
+> **注意**: `--HEAD` フラグが必要です（まだ正式リリースがないため）。
+
+### 方法2: ソースからビルド
+
+#### MeCabのインストール（必須）
 
 ```bash
 brew install mecab mecab-ipadic
 ```
 
-### MoZukuGrammarライブラリのビルド
+#### MoZukuGrammarライブラリのビルド
 
 ```bash
 cmake -B MoZukuGrammar/build -S MoZukuGrammar -DCMAKE_BUILD_TYPE=Release
 cmake --build MoZukuGrammar/build
 ```
 
-### azooKeyMacのビルド・インストール
+#### azooKeyMacのビルド・インストール
 
 ```bash
 ./install.sh
