@@ -24,19 +24,16 @@
 
 ## インストール
 
-### 方法1: Homebrew（推奨）
+### 方法1: Homebrew Cask（推奨・Xcode不要）
 
 ```bash
-# タップを追加してインストール
 brew tap serkenn/azuukuy https://github.com/serkenn/azuuKuy
-brew install --HEAD azuukuy
+brew install --cask azuukuy
 ```
 
-インストール後、`brew info azuukuy` に表示される手順（モデルファイルの配置・IMEの有効化）を実行してください。
+インストール後、`brew info --cask azuukuy` に表示される手順（モデルファイルの配置・IMEの有効化）を実行してください。
 
-> **注意**: `--HEAD` フラグが必要です（まだ正式リリースがないため）。
-
-### 方法2: ソースからビルド
+### 方法2: ソースからビルド（Xcode必要）
 
 #### MeCabのインストール（必須）
 

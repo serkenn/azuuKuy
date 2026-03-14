@@ -1,0 +1,91 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and Release
+    runs-on: macos-15
+    steps:
+      - name: Select Xcode 16.3
+        run: |
+          XCODE_PATH=$(ls -d /Applications/Xcode_16.3*.app | head -n 1)
+          echo "Using Xcode at $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
+          xcodebuild -version
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install MeCab
+        run: |
+          brew install mecab mecab-ipadic
+          echo "MeCab version: $(mecab --version)"
+
+      - name: Build MoZukuGrammar
+        run: |
+          cmake -B MoZukuGrammar/build -S MoZukuGrammar -DCMAKE_BUILD_TYPE=Release
+          cmake --build MoZukuGrammar/build
+
+      - name: Create placeholder model files
+        run: |
+          mkdir -p azooKeyMac/Resources/base_n5_lm
+          mkdir -p azooKeyMac/Resources/zenz-v3.1-small-gguf
+          touch azooKeyMac/Resources/base_n5_lm/lm_c_abc.marisa
+          touch azooKeyMac/Resources/base_n5_lm/lm_u_xbc.marisa
+          touch azooKeyMac/Resources/base_n5_lm/lm_u_abx.marisa
+          touch azooKeyMac/Resources/base_n5_lm/lm_r_xbx.marisa
+          touch azooKeyMac/Resources/zenz-v3.1-small-gguf/ggml-model-Q5_K_M.gguf
+
+      - name: Build AzuuKuy.app
+        run: |
+          xcodebuild \
+            -project azooKeyMac.xcodeproj \
+            -scheme azooKeyMac \
+            -configuration Release \
+            -archivePath build/archive.xcarchive \
+            archive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Package and compute sha256
+        run: |
+          cp -r build/archive.xcarchive/Products/Applications/AzuuKuy.app .
+          zip -r --symlinks AzuuKuy.zip AzuuKuy.app
+          SHA256=$(shasum -a 256 AzuuKuy.zip | awk '{print $1}')
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "SHA256=$SHA256"   >> "$GITHUB_ENV"
+
+      - name: Upload to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          files: AzuuKuy.zip
+          generate_release_notes: true
+
+      - name: Update Cask with new version and sha256
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git checkout main
+
+          sed -i '' \
+            "s|version \"[^\"]*\"|version \"$VERSION\"|g" \
+            Casks/azuukuy.rb
+          sed -i '' \
+            "s|sha256 \"[^\"]*\"|sha256 \"$SHA256\"|g" \
+            Casks/azuukuy.rb
+
+          git add Casks/azuukuy.rb
+          git commit -m "chore: bump Cask to v$VERSION [skip ci]"
+          git push origin main
