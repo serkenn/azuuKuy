@@ -34,7 +34,7 @@ final class GrammarWarningWindow: NSPanel {
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(equalTo: contentView!.leadingAnchor, constant: 10),
             label.trailingAnchor.constraint(equalTo: contentView!.trailingAnchor, constant: -10),
-            label.centerYAnchor.constraint(equalTo: contentView!.centerYAnchor),
+            label.centerYAnchor.constraint(equalTo: contentView!.centerYAnchor)
         ])
     }
 
@@ -43,7 +43,9 @@ final class GrammarWarningWindow: NSPanel {
     ///   - diagnostics: 診断結果リスト
     ///   - cursorLocation: カーソルのスクリーン座標
     func show(diagnostics: [GrammarDiagnostic], near cursorLocation: CGPoint) {
-        guard !diagnostics.isEmpty else { return }
+        guard !diagnostics.isEmpty else {
+            return
+        }
 
         let icon = diagnostics.first!.severity == 1 ? "⛔️" : "⚠️"
         let messages = diagnostics.prefix(2).map { $0.message }.joined(separator: " / ")

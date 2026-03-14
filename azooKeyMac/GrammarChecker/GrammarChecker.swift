@@ -21,10 +21,14 @@ actor GrammarChecker {
     /// MeCabの辞書パスを指定して初期化する
     /// - Parameter mecabDicPath: 例 "/opt/homebrew/lib/mecab/dic/ipadic"
     func initialize(mecabDicPath: String = GrammarChecker.detectMecabDicPath()) {
-        guard !isReady else { return }
+        guard !isReady else {
+            return
+        }
 
         analyzerPtr = mozuku_analyzer_create()
-        guard let ptr = analyzerPtr else { return }
+        guard let ptr = analyzerPtr else {
+            return
+        }
 
         let result = mozuku_analyzer_initialize(ptr, mecabDicPath)
         isReady = (result == 1)
@@ -42,12 +46,16 @@ actor GrammarChecker {
 
     /// 文法チェックを実行する（初期化されていない場合は空配列を返す）
     func checkGrammar(_ text: String) -> [GrammarDiagnostic] {
-        guard isReady, let ptr = analyzerPtr, !text.isEmpty else { return [] }
+        guard isReady, let ptr = analyzerPtr, !text.isEmpty else {
+            return []
+        }
 
         let list = mozuku_check_grammar(ptr, text)
         defer { mozuku_diagnostic_list_free(list) }
 
-        guard list.count > 0, let items = list.items else { return [] }
+        guard list.count > 0, let items = list.items else {
+            return []
+        }
 
         return (0..<Int(list.count)).map { i in
             let item = items[i]
@@ -71,7 +79,7 @@ actor GrammarChecker {
             "/opt/homebrew/lib/mecab/dic/ipadic",
             "/usr/local/lib/mecab/dic/ipadic",
             "/usr/lib/mecab/dic/ipadic",
-            "/usr/share/mecab/dic/ipadic",
+            "/usr/share/mecab/dic/ipadic"
         ]
         return candidates.first {
             FileManager.default.fileExists(atPath: $0)

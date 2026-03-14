@@ -25,10 +25,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Swift 6.0
+      - name: Setup Swift 6.1
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: "6.0"
+          swift-version: "6.1"
       - name: Build
         run: swift build --package-path Core
       - name: Test
@@ -53,6 +53,15 @@ jobs:
         run: |
           cmake -B MoZukuGrammar/build -S MoZukuGrammar -DCMAKE_BUILD_TYPE=Release
           cmake --build MoZukuGrammar/build
+      - name: Create placeholder model files (not in repo due to size)
+        run: |
+          mkdir -p azooKeyMac/Resources/base_n5_lm
+          mkdir -p azooKeyMac/Resources/zenz-v3.1-small-gguf
+          touch azooKeyMac/Resources/base_n5_lm/lm_c_abc.marisa
+          touch azooKeyMac/Resources/base_n5_lm/lm_u_xbc.marisa
+          touch azooKeyMac/Resources/base_n5_lm/lm_u_abx.marisa
+          touch azooKeyMac/Resources/base_n5_lm/lm_r_xbx.marisa
+          touch azooKeyMac/Resources/zenz-v3.1-small-gguf/ggml-model-Q5_K_M.gguf
       - name: List available schemes
         run: xcodebuild -project azooKeyMac.xcodeproj -list
       - name: Test building azooKeyMac (Release configuration)

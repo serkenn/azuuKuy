@@ -798,7 +798,9 @@ class azooKeyMacInputController: IMKInputController, NSMenuItemValidation { // s
             let cursorLocation = cursorRect.origin
             Task.detached(priority: .utility) { [weak self] in
                 let diags = await GrammarChecker.shared.checkGrammar(checkText)
-                guard !diags.isEmpty else { return }
+                guard !diags.isEmpty else {
+                    return
+                }
                 await MainActor.run {
                     self?.grammarWarningWindow.show(diagnostics: diags, near: cursorLocation)
                 }
