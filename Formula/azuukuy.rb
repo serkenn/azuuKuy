@@ -6,9 +6,9 @@ class Azuukuy < Formula
   homepage "https://github.com/serkenn/azuuKuy"
   license "AGPL-3.0"
 
-  url "https://github.com/serkenn/azuuKuy/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "11694d46d03ca26323cf3ccd73f829dfc2267c16678129fdbba40632640b956c"
-  version "0.1.0"
+  url "https://github.com/serkenn/azuuKuy/archive/refs/tags/v0.1.1.tar.gz"
+  sha256 "487bf1eaf35a930e4df9048fb6de9c6ef524dbe51d92f80f2b3d5e3ccdc8a93b"
+  version "0.1.1"
 
   head "https://github.com/serkenn/azuuKuy.git", branch: "main"
 
