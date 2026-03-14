@@ -6,6 +6,10 @@ class Azuukuy < Formula
   homepage "https://github.com/serkenn/azuuKuy"
   license "AGPL-3.0"
 
+  url "https://github.com/serkenn/azuuKuy/archive/refs/tags/v0.1.0.tar.gz"
+  sha256 "11694d46d03ca26323cf3ccd73f829dfc2267c16678129fdbba40632640b956c"
+  version "0.1.0"
+
   head "https://github.com/serkenn/azuuKuy.git", branch: "main"
 
   depends_on "cmake" => :build
