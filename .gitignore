@@ -1,0 +1,55 @@
+# ビルド成果物
+build/
+dist/
+*.o
+*.a
+*.so
+*.dylib
+*.exe
+*.dll
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+!CMakeLists.txt
+
+# Xcode
+*.xcuserstate
+xcuserdata/
+*.xccheckout
+*.xcscmblueprint
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+!default.pbxuser
+!default.mode1v3
+!default.mode2v3
+!default.perspectivev3
+*.swiftmodule
+*.app
+*.dmg
+*.pkg
+
+# Node / vscode extension
+node_modules/
+vscode-mozuku/out/
+vscode-mozuku/bin/
+vscode-mozuku/data/
+vscode-mozuku/metadata.json
+
+# 大容量モデルファイル（Git LFS対象 / 別途ダウンロード）
+*.gguf
+*.marisa
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# ログ・キャッシュ
+*.log
+.cache/
