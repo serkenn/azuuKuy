@@ -6,6 +6,7 @@ CONFIGURATION="Release"
 ARCHIVE_PATH="./build/archive.xcarchive"
 EXPORT_PATH="./build/export"
 EXPORT_OPTIONS_PLIST="./exportOptions.plist"
+HOST_ARCH="$(uname -m)"
 
 # 1. Clean Build
 rm -rf ./build
@@ -15,6 +16,13 @@ rm -f ./Core/Package.resolved
 
 # 2. Archive
 # Note: use `"$(mktemp -d)` to avoid conflicts with previous builds
+# Build MoZukuGrammar for the same architecture as the app link target.
+cmake -B MoZukuGrammar/build -S MoZukuGrammar \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_OSX_ARCHITECTURES="${HOST_ARCH}" \
+  -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0
+cmake --build MoZukuGrammar/build
+
 xcodebuild \
   -project "${PROJECT_NAME}.xcodeproj" \
   -scheme "${SCHEME}" \
@@ -24,7 +32,9 @@ xcodebuild \
   -derivedDataPath "$(mktemp -d)" \
   -clonedSourcePackagesDirPath $(mktemp -d) \
   -allowProvisioningUpdates \
-  -destination "generic/platform=macOS"
+  -destination "generic/platform=macOS" \
+  ARCHS="${HOST_ARCH}" \
+  ONLY_ACTIVE_ARCH=YES
 
 # 3. Export
 xcodebuild -exportArchive \

@@ -11,6 +11,7 @@
 変換を確定すると、カーソル付近に文法警告がトースト表示されます。
 
 対応する文法ルール：
+
 - **ら抜き言葉**（例：「食べれる」→「食べられる」）
 - **同じ助詞の重複**（例：「〜がが〜」）
 - **不正な助詞の連続**
@@ -44,7 +45,11 @@ brew install mecab mecab-ipadic
 #### MoZukuGrammarライブラリのビルド
 
 ```bash
-cmake -B MoZukuGrammar/build -S MoZukuGrammar -DCMAKE_BUILD_TYPE=Release
+HOST_ARCH=$(uname -m)
+cmake -B MoZukuGrammar/build -S MoZukuGrammar \
+   -DCMAKE_BUILD_TYPE=Release \
+   -DCMAKE_OSX_ARCHITECTURES="$HOST_ARCH" \
+   -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0
 cmake --build MoZukuGrammar/build
 ```
 
@@ -88,7 +93,11 @@ AzuuKuy/
 
 ```bash
 # 1. MoZukuGrammarライブラリをビルド
-cmake -B MoZukuGrammar/build -S MoZukuGrammar -DCMAKE_BUILD_TYPE=Release
+HOST_ARCH=$(uname -m)
+cmake -B MoZukuGrammar/build -S MoZukuGrammar \
+   -DCMAKE_BUILD_TYPE=Release \
+   -DCMAKE_OSX_ARCHITECTURES="$HOST_ARCH" \
+   -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0
 cmake --build MoZukuGrammar/build
 
 # 2. Xcodeでazooキーをビルド
@@ -115,14 +124,17 @@ cp azooKey-Desktop/azooKeyMac/Resources/base_n5_lm/*.marisa \
 ### トラブルシューティング
 
 **文法チェックが動作しない場合**
+
 - MeCabがインストールされているか確認：`mecab --version`
 - `MoZukuGrammar/build/libmozuku_grammar.a` が存在するか確認
 
 **ビルドが失敗する場合**
+
 - XcodeのGUI上で「Team ID」を Personal Team に変更してください
 - `azooKeyMac.xcodeproj` → Signing & Capabilities → Team を変更
 
 **変換精度が低い場合**
+
 - `azooKeyMac/Resources/zenz-v3.1-small-gguf/ggml-model-Q5_K_M.gguf` が70MB程度のファイルか確認してください（Git LFSが必要）
 
 ## ライセンス

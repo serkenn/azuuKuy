@@ -3,6 +3,7 @@ set -xe -o pipefail
 
 IGNORE_LINT=false
 DRY_RUN=false
+HOST_ARCH="$(uname -m)"
 
 # Parse command-line options
 while [[ "$#" -gt 0 ]]; do
@@ -31,14 +32,21 @@ else
     echo "Skipping swiftlint checks due to --ignore-lint option."
 fi
 
+# Build MoZukuGrammar for the same architecture as the app build
+cmake -B MoZukuGrammar/build -S MoZukuGrammar \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_OSX_ARCHITECTURES="${HOST_ARCH}" \
+    -DCMAKE_OSX_DEPLOYMENT_TARGET=13.0
+cmake --build MoZukuGrammar/build
+
 
 # Check if xcpretty is installed
 if command -v xcpretty &> /dev/null
 then
-    xcodebuild -project azooKeyMac.xcodeproj -scheme azooKeyMac clean archive -archivePath build/archive.xcarchive | xcpretty
+    xcodebuild -project azooKeyMac.xcodeproj -scheme azooKeyMac clean archive -archivePath build/archive.xcarchive ARCHS="${HOST_ARCH}" ONLY_ACTIVE_ARCH=YES | xcpretty
 else
     echo "xcpretty could not be found. Proceeding without xcpretty."
-    xcodebuild -project azooKeyMac.xcodeproj -scheme azooKeyMac clean archive -archivePath build/archive.xcarchive
+    xcodebuild -project azooKeyMac.xcodeproj -scheme azooKeyMac clean archive -archivePath build/archive.xcarchive ARCHS="${HOST_ARCH}" ONLY_ACTIVE_ARCH=YES
 fi
 
 if [ "$DRY_RUN" = true ]; then
