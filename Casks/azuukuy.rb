@@ -15,17 +15,24 @@ cask "azuukuy" do
   depends_on formula: "mecab-ipadic"
   depends_on formula: "git-lfs"
 
-  # Install to user-level Input Methods directory (no sudo required)
-  artifact "AzuuKuy.app", target: "#{Dir.home}/Library/Input Methods/AzuuKuy.app"
+  # No artifact stanza — we manually copy into ~/Library/Input Methods
+  # because `artifact` fails on upgrade ("source is not there").
+  container type: :zip
 
   preflight do
     FileUtils.mkdir_p "#{Dir.home}/Library/Input Methods"
+    # Remove old version before installing new one
+    old_app = "#{Dir.home}/Library/Input Methods/AzuuKuy.app"
+    FileUtils.rm_rf(old_app) if File.exist?(old_app)
   end
 
   postflight do
+    staged = staged_path.join("AzuuKuy.app")
+    target = "#{Dir.home}/Library/Input Methods/AzuuKuy.app"
+    FileUtils.cp_r(staged.to_s, target)
+
     system_command "/usr/bin/xattr",
-                   args: ["-rd", "com.apple.quarantine",
-                          "#{Dir.home}/Library/Input Methods/AzuuKuy.app"],
+                   args: ["-rd", "com.apple.quarantine", target],
                    sudo: false
 
     gguf_dest = "#{Dir.home}/Library/Input Methods/AzuuKuy.app/Contents/Resources/zenz-v3.1-small-gguf/ggml-model-Q5_K_M.gguf"
