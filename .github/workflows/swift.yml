@@ -15,8 +15,6 @@ jobs:
           sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
           xcodebuild -version
       - uses: actions/checkout@v4
-        with:
-          submodules: true
       - name: Build
         run: swift build --package-path Core
       - name: Test
@@ -27,12 +25,10 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Setup Swift 6.2
+      - name: Setup Swift 6.0
         uses: swift-actions/setup-swift@v2
         with:
-          swift-version: "6.2"
+          swift-version: "6.0"
       - name: Build
         run: swift build --package-path Core
       - name: Test
@@ -49,30 +45,32 @@ jobs:
           sudo xcode-select -s "$XCODE_PATH/Contents/Developer"
           xcodebuild -version
       - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - name: Verify xcodebuild installation
-        run: xcodebuild -version
+      - name: Install MeCab
+        run: |
+          brew install mecab mecab-ipadic
+          echo "MeCab version: $(mecab --version)"
+      - name: Build MoZukuGrammar
+        run: |
+          cmake -B MoZukuGrammar/build -S MoZukuGrammar -DCMAKE_BUILD_TYPE=Release
+          cmake --build MoZukuGrammar/build
       - name: List available schemes
         run: xcodebuild -project azooKeyMac.xcodeproj -list
       - name: Test building azooKeyMac (Release configuration)
         run: |
-         xcodebuild \
-          -project azooKeyMac.xcodeproj \
-          -scheme azooKeyMac \
-          -configuration Release \
-          -destination 'generic/platform=macOS' \
-          CODE_SIGNING_ALLOWED=NO \
-          CODE_SIGNING_REQUIRED=NO \
-          CODE_SIGN_IDENTITY=""
+          xcodebuild \
+            -project azooKeyMac.xcodeproj \
+            -scheme azooKeyMac \
+            -configuration Release \
+            -destination 'generic/platform=macOS' \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
 
   swiftlint:
     name: SwiftLint
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-        with:
-          submodules: true
       - name: Install SwiftLint
         run: |
           brew update
@@ -80,6 +78,4 @@ jobs:
       - name: Check SwiftLint version
         run: swiftlint version
       - name: Run SwiftLint
-        run: |
-          swiftlint --quiet --strict
-  
+        run: swiftlint --quiet --strict

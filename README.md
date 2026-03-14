@@ -1,129 +1,127 @@
-# azooKey on macOS
+# AzuuKuy
 
-[azooKey](https://github.com/ensan-hcl/azooKey)のmacOS版です。高精度なニューラルかな漢字変換エンジン「Zenzai」を導入した、オープンソースの日本語入力システムです。
+[azooKey-Desktop](https://github.com/azooKey/azooKey-Desktop)（macOS向け日本語IME）に[MoZuku](https://github.com/t3tra-dev/MoZuku)の文法チェック機能を統合したプロジェクトです。
+
+ニューラルかな漢字変換エンジン「Zenzai」による高精度な変換に加え、**変換確定後にリアルタイムで文法エラーを検出・警告**します。
 
 **現在アルファ版のため、動作は一切保証できません**。
 
+## 追加機能（MoZuku統合）
+
+変換を確定すると、カーソル付近に文法警告がトースト表示されます。
+
+対応する文法ルール：
+- **ら抜き言葉**（例：「食べれる」→「食べられる」）
+- **同じ助詞の重複**（例：「〜がが〜」）
+- **不正な助詞の連続**
+- **読点の使いすぎ**（1文中に4つ以上）
+- **接続詞の繰り返し**
+
 ## 動作環境
 
-macOS 15で動作確認しています。macOS 14およびmacOS 26でも利用できますが、動作は検証していません。
+- macOS 13.0以上
+- MeCab + mecab-ipadic（文法チェックに必要）
 
-## リリース版インストール
+## インストール
 
-[Releases](https://github.com/ensan-hcl/azooKey-Desktop/releases)から`.pkg`ファイルをダウンロードして、インストールしてください。
-
-その後、以下の手順で利用できます。
-
-- macOSからログアウトし、再ログイン
-- 「設定」>「キーボード」>「入力ソース」を編集>「+」ボタン>「日本語」>azooKeyを追加>完了
-- メニューバーアイコンからazooKeyを選択
-
-### Install with Homebrew
-または、Homebrewを用いてインストールすることもできます。
+### MeCabのインストール（必須）
 
 ```bash
-brew install azooKey
-```
-この場合も上記のログアウト・再ログイン後の設定は必要です。
-アップグレードは以下のコマンドで実行できますが、再起動が必要になることがあります。
-
-```bash
-brew upgrade azooKey
+brew install mecab mecab-ipadic
 ```
 
-## コミュニティ
-
-azooKey on macOSの開発に参加したい方、使い方に質問がある方、要望や不具合報告がある方は、ぜひ[azooKeyのDiscordサーバ](https://discord.gg/dY9gHuyZN5)にご参加ください。
-
-
-### azooKey on macOSを支援する
-
-GitHub Sponsorsをご利用ください。
-
-
-## 機能
-
-* ニューラルかな漢字変換システム「Zenzai」による高精度な変換
-  * プロフィールプロンプト機能
-  * 履歴学習機能
-  * ユーザ辞書機能
-  * 個人最適化システム「[Tuner](https://github.com/azooKey/Tuner)」との連携機能
-* LLMによる「いい感じ変換」機能
-* ライブ変換
-* AZIKのネイティブサポート
-
-
-## 開発ガイド
-
-コントリビュート歓迎です！！
-
-### 推奨環境
-* macOS 15+
-* Xcode 26.1+
-* Git LFS導入済み
-* SwiftLint導入済み
-
-### 開発版のビルド・デバッグ
-
-まず、想定環境が整っていることを確認してください。 git-lfs のない状態では正しく clone できません。
-
-cloneする際には`--recursive`をつけてサブモジュールまでローカルに落としてください。
+### MoZukuGrammarライブラリのビルド
 
 ```bash
-git clone https://github.com/azooKey/azooKey-Desktop --recursive
+cmake -B MoZukuGrammar/build -S MoZukuGrammar -DCMAKE_BUILD_TYPE=Release
+cmake --build MoZukuGrammar/build
 ```
 
-以下のスクリプトを用いて最新のコードをビルドしてください。`.pkg`によるインストールと同等になります。その後、上記の手順を行ってください。また、submoduleが更新されている場合は `git submodule update --init` を行ってください。
+### azooKeyMacのビルド・インストール
 
 ```bash
-# submoduleを更新
-git submodule update --init
-
-# ビルド＆インストール
 ./install.sh
 ```
 
-開発中はazooKeyのプロセスをkillすることで最新版を反映することが出来ます。また、必要に応じて入力ソースからazooKeyを削除して再度追加する、macOSからログアウトして再ログインするなど、リセットが必要になる場合があります。
+その後、以下の手順で利用できます：
 
-### 開発時のトラブルシューティング
+1. macOSからログアウトし、再ログイン
+2. 「設定」→「キーボード」→「入力ソース」を編集 → 「+」→「日本語」→ azooKey を追加
 
-`install.sh`でビルドが成功しない場合、以下をご確認ください。
+## 開発ガイド
 
-* XcodeのGUI上で「Team ID」を変更する必要がある場合があります
-  * `azooKeyMac.xcodeproj` を Xcode で開く
-  * azooKeyMac -> Signing & Capabilities から、 Team を Personal Team に変更する
-  * リポジトリ内に存在する全てのバンドルID文字列を、適当な文字列に置換 (ex: `dev.ensan.inputmethod.azooKeyMac` -> `dev.yourname.inputmethod.azooKeyMac`)
-* 「Packages are not supported when using legacy build locations, but the current project has them enabled.」と表示される場合は[https://qiita.com/glassmonkey/items/3e8203900b516878ff2c](https://qiita.com/glassmonkey/items/3e8203900b516878ff2c)を参考に、Xcodeの設定をご確認ください
-* Xcode 26.0ではビルドできない可能性があります。Xcode 16系または26.1以降をご利用ください。
+### リポジトリ構造
 
-変換精度がリリース版に比べて悪いと感じた場合、以下をご確認ください。
-* Git LFSが導入されていない環境では、重みファイルがローカル環境に落とせていない場合があります。`azooKey-Desktop/azooKeyMac/Resources/zenz-v3-small-gguf/ggml-model-Q5_K_M.gguf`が70MB程度のファイルとなっているかを確認してください
+```
+AzuuKuy/
+├── azooKeyMac/              IMEメインコード
+│   ├── GrammarChecker/      MoZuku統合コード（文法チェックSwiftラッパー・警告UI）
+│   ├── InputController/     キー入力・変換ロジック
+│   └── ...
+├── azooKeyMac.xcodeproj/    Xcodeプロジェクト
+├── Core/                    Swift Package（変換エンジン・設定）
+├── MoZukuGrammar/           文法チェッカーC++ライブラリ
+│   ├── include/             ヘッダー（mozuku_bridge.h含む）
+│   ├── src/                 ソース（MeCabのみ依存）
+│   └── CMakeLists.txt
+└── .github/workflows/       CI設定
+```
 
-### pkgファイルの作成
-`pkgbuild.sh`によって配布用のdmgファイルを作成できます。`build/azooKeyMac.app` としてDeveloper IDで署名済みの.appを配置してください。
+### 推奨環境
 
-### v1.0リリースに向けて
-[meta: v1.0のリリースに向けたロードマップ（#181）](https://github.com/azooKey/azooKey-Desktop/issues/181)をご覧ください．
+- macOS 15+
+- Xcode 16.3+
+- MeCab（`brew install mecab mecab-ipadic`）
 
-## Community Forks
+### ビルド手順
 
-### [fcitx5-hazkey](https://github.com/7ka-Hiira/fcitx5-hazkey)
-@7ka-Hiira さんによるLinux系OS向けのクライアント実装です。
+```bash
+# 1. MoZukuGrammarライブラリをビルド
+cmake -B MoZukuGrammar/build -S MoZukuGrammar -DCMAKE_BUILD_TYPE=Release
+cmake --build MoZukuGrammar/build
 
-### [azooKey-Windows](https://github.com/fkunn1326/azooKey-Windows)
-@fkunn1326 さんによるWindows向けクライアント実装です。
+# 2. Xcodeでazooキーをビルド
+open azooKeyMac.xcodeproj
+# または
+./install.sh
+```
 
-### [azoo-key-skkserv](https://github.com/gitusp/azoo-key-skkserv)
-@gitusp さんによるSKKクライアント向けのSKKサーバ実装です。macOS向けGUIアプリケーションを含みます。
+### モデルファイルについて
 
-## Reference
+変換精度に関わる重みファイル（`*.gguf`, `*.marisa`）はサイズが大きいためリポジトリに含まれていません。
 
-Thanks to authors!!
+元リポジトリ [azooKey/azooKey-Desktop](https://github.com/azooKey/azooKey-Desktop) からGit LFSでダウンロードしてください：
 
-* https://mzp.hatenablog.com/entry/2017/09/17/220320
-* https://www.logcg.com/en/archives/2078.html
-* https://stackoverflow.com/questions/27813151/how-to-develop-a-simple-input-method-for-mac-os-x-in-swift
-* https://mzp.booth.pm/items/809262
+```bash
+# 元リポジトリからファイルを取得する例
+git clone https://github.com/azooKey/azooKey-Desktop --recursive
+cp azooKey-Desktop/azooKeyMac/Resources/zenz-v3.1-small-gguf/ggml-model-Q5_K_M.gguf \
+   azooKeyMac/Resources/zenz-v3.1-small-gguf/
+cp azooKey-Desktop/azooKeyMac/Resources/base_n5_lm/*.marisa \
+   azooKeyMac/Resources/base_n5_lm/
+```
 
-## Acknowledgement
-本プロジェクトは情報処理推進機構(IPA)による[2024年度未踏IT人材発掘・育成事業](https://www.ipa.go.jp/jinzai/mitou/it/2024/koubokekka.html)の支援を受けて開発を行いました。
+### トラブルシューティング
+
+**文法チェックが動作しない場合**
+- MeCabがインストールされているか確認：`mecab --version`
+- `MoZukuGrammar/build/libmozuku_grammar.a` が存在するか確認
+
+**ビルドが失敗する場合**
+- XcodeのGUI上で「Team ID」を Personal Team に変更してください
+- `azooKeyMac.xcodeproj` → Signing & Capabilities → Team を変更
+
+**変換精度が低い場合**
+- `azooKeyMac/Resources/zenz-v3.1-small-gguf/ggml-model-Q5_K_M.gguf` が70MB程度のファイルか確認してください（Git LFSが必要）
+
+## ライセンス
+
+- azooKey-Desktop: [MIT License](https://github.com/azooKey/azooKey-Desktop/blob/main/LICENSE)
+- MoZuku: [AGPL-3.0 License](https://github.com/t3tra-dev/MoZuku/blob/main/LICENSE)
+
+このリポジトリはAGPL-3.0に従います。
+
+## 元プロジェクト
+
+- [azooKey/azooKey-Desktop](https://github.com/azooKey/azooKey-Desktop) — macOS日本語IME
+- [t3tra-dev/MoZuku](https://github.com/t3tra-dev/MoZuku) — 日本語文法チェッカー（LSP）
