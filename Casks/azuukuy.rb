@@ -33,6 +33,7 @@ cask "azuukuy" do
       system_command "/bin/bash",
                      args: ["-c", <<~SH],
                        set -e
+                       export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
                        TMPDIR=$(mktemp -d)
                        git lfs install
                        git clone --depth 1 https://github.com/azooKey/azooKey-Desktop "$TMPDIR/azooKey-Desktop"
