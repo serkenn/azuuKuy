@@ -2,8 +2,8 @@
 # frozen_string_literal: true
 
 cask "azuukuy" do
-  version "0.1.1"
-  sha256 "placeholder_updated_automatically_by_release_workflow"
+  version "0.2.1"
+  sha256 "8274ec86dedc6b3982e82e622e04f84899179690bb58ac838265d08c25bc9dfc"
 
   url "https://github.com/serkenn/azuuKuy/releases/download/v#{version}/AzuuKuy.zip"
   name "AzuuKuy"
