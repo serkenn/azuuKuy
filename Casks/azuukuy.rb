@@ -34,6 +34,8 @@ cask "azuukuy" do
                        set -e
                        TMPDIR=$(mktemp -d)
                        git clone --depth 1 https://github.com/azooKey/azooKey-Desktop "$TMPDIR/azooKey-Desktop"
+                       mkdir -p "#{Dir.home}/Library/Input Methods/AzuuKuy.app/Contents/Resources/zenz-v3.1-small-gguf"
+                       mkdir -p "#{Dir.home}/Library/Input Methods/AzuuKuy.app/Contents/Resources/base_n5_lm"
                        cp "$TMPDIR/azooKey-Desktop/azooKeyMac/Resources/zenz-v3.1-small-gguf/ggml-model-Q5_K_M.gguf" \
                           "#{Dir.home}/Library/Input Methods/AzuuKuy.app/Contents/Resources/zenz-v3.1-small-gguf/"
                        cp "$TMPDIR/azooKey-Desktop/azooKeyMac/Resources/base_n5_lm/"*.marisa \
