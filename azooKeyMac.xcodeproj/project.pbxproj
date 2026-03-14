@@ -526,8 +526,8 @@
 					"-lstdc++",
 					"-liconv",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.ensan.inputmethod.azooKeyMac;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.serkenn.azuuKuy;
+				PRODUCT_NAME = AzuuKuy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = azooKeyMac/GrammarChecker/azooKeyMac-Bridging-Header.h;
 				SWIFT_OBJC_INTEROP_MODE = objcxx;
@@ -579,8 +579,8 @@
 					"-lstdc++",
 					"-liconv",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = dev.ensan.inputmethod.azooKeyMac;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.serkenn.azuuKuy;
+				PRODUCT_NAME = AzuuKuy;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = azooKeyMac/GrammarChecker/azooKeyMac-Bridging-Header.h;
 				SWIFT_OBJC_INTEROP_MODE = objcxx;

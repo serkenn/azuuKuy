@@ -37,20 +37,20 @@ class Azuukuy < Formula
            "CODE_SIGN_IDENTITY="
 
     # Install the built app into the Homebrew prefix
-    app = buildpath/"build/archive.xcarchive/Products/Applications/azooKeyMac.app"
+    app = buildpath/"build/archive.xcarchive/Products/Applications/AzuuKuy.app"
     prefix.install app
   end
 
   def caveats
     <<~EOS
-      AzuuKuy (azooKeyMac.app) has been built and placed in:
-        #{opt_prefix}/azooKeyMac.app
+      AzuuKuy (AzuuKuy.app) has been built and placed in:
+        #{opt_prefix}/AzuuKuy.app
 
       ---------------------------------------------------------------
       STEP 1: Install to Input Methods (requires admin privileges)
       ---------------------------------------------------------------
-        sudo cp -r #{opt_prefix}/azooKeyMac.app "/Library/Input Methods/"
-        sudo chmod -R 755 "/Library/Input Methods/azooKeyMac.app"
+        sudo cp -r #{opt_prefix}/AzuuKuy.app "/Library/Input Methods/"
+        sudo chmod -R 755 "/Library/Input Methods/AzuuKuy.app"
 
       ---------------------------------------------------------------
       STEP 2: Download required model files (one-time setup)
@@ -60,9 +60,9 @@ class Azuukuy < Formula
 
         git clone https://github.com/azooKey/azooKey-Desktop --recursive /tmp/azooKey-Desktop
         cp /tmp/azooKey-Desktop/azooKeyMac/Resources/zenz-v3.1-small-gguf/ggml-model-Q5_K_M.gguf \
-           "/Library/Input Methods/azooKeyMac.app/Contents/Resources/zenz-v3.1-small-gguf/"
+           "/Library/Input Methods/AzuuKuy.app/Contents/Resources/zenz-v3.1-small-gguf/"
         cp /tmp/azooKey-Desktop/azooKeyMac/Resources/base_n5_lm/*.marisa \
-           "/Library/Input Methods/azooKeyMac.app/Contents/Resources/base_n5_lm/"
+           "/Library/Input Methods/AzuuKuy.app/Contents/Resources/base_n5_lm/"
 
       ---------------------------------------------------------------
       STEP 3: Enable the IME
@@ -78,6 +78,6 @@ class Azuukuy < Formula
   end
 
   test do
-    assert_predicate opt_prefix/"azooKeyMac.app", :directory?
+    assert_predicate opt_prefix/"AzuuKuy.app", :directory?
   end
 end
